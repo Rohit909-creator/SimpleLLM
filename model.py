@@ -81,7 +81,7 @@ class TLM(nn.Module):
     self.token_embeddings = nn.Embedding(vocab_size, embed_size)
     self.positional_embeddings = nn.Embedding(context_length, embed_size)
     self.word_embeddings = nn.Embedding(context_length, embed_size)
-
+    self.context_length = context_length
     self.block = nn.ModuleList()
     for _ in range(num_blocks):
       self.block.append(TLMBlock( 4, context_length,embed_size))
@@ -118,7 +118,7 @@ class TLM(nn.Module):
   def generate(self, idx, max_new_tokens):
       for _ in range(max_new_tokens):
 
-        idx_cond = idx[:,-block_size:]
+        idx_cond = idx[:,-self.context_length:]
 
         logits, loss = self(idx_cond)
 
